@@ -109,13 +109,13 @@ python3 analyze_results.py
 ## 5. Визуализация результатов
 
 ### 5.1. График времени выполнения
-![Время выполнения](results/plots/performance.png)
+![Время выполнения](results/plots/execution_time.png)
 
 ### 5.2. График ускорения
-![Ускорение](results/plots/performance.png)
+![Ускорение](results/plots/speedup.png)
 
 ### 5.3. График эффективности
-![Эффективность](results/plots/performance.png)
+![Эффективность](results/plots/efficiency.png)
 
 > *Графики сохранены в `results/plots/`*
 
