@@ -265,7 +265,7 @@ python3 analyze_results.py
 ### 9.1. Исходный код
 - [run_benchmarks.py](run_benchmarks.py)
 - [analyze_results.py](analyze_results.py)
-- [cg_parallel.py](cg_parallel.py)
+- [cg_parallel.py](parallel_cg.py)
 - [parallel_scatter_gather_variable.py](parallel_scatter_gather_variable.py)
 
 ### 9.2. Используемые библиотеки и версии
