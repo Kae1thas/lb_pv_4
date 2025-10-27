@@ -3,18 +3,31 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
-df = pd.read_csv("results/times.csv")
-os.makedirs("results/plots", exist_ok=True)
+# Папки
+RESULTS_DIR = "results"
+PLOTS_DIR = os.path.join(RESULTS_DIR, "plots")
+os.makedirs(PLOTS_DIR, exist_ok=True)
+
+# Читаем CSV
+df = pd.read_csv(os.path.join(RESULTS_DIR, "times.csv"))
 
 # Базовое время
 t_seq = df[df['procs'] == 1]['time'].iloc[0]
 
-plt.figure(figsize=(12, 10))
+# Убираем ERROR
+df = df[df['time'] != 'ERROR']
+df['time'] = pd.to_numeric(df['time'], errors='coerce')
+df['speedup'] = pd.to_numeric(df['speedup'], errors='coerce')
+df['efficiency'] = pd.to_numeric(df['efficiency'], errors='coerce')
+df = df.dropna(subset=['time'])
 
-# 1. Время выполнения
-plt.subplot(2, 2, 1)
+# -----------------------------
+# 1. График времени выполнения
+# -----------------------------
+plt.figure(figsize=(8, 6))
 for prog in df['program'].unique():
-    if prog == 'sequential': continue
+    if prog == 'sequential': 
+        continue
     sub = df[df['program'] == prog]
     plt.plot(sub['procs'], sub['time'], 'o-', label=prog)
 plt.yscale('log')
@@ -23,11 +36,17 @@ plt.ylabel('Время (с, лог. шкала)')
 plt.title('Время выполнения')
 plt.legend()
 plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(os.path.join(PLOTS_DIR, "execution_time.png"), dpi=150)
+plt.close()
 
-# 2. Ускорение
-plt.subplot(2, 2, 2)
+# -----------------------------
+# 2. График ускорения
+# -----------------------------
+plt.figure(figsize=(8, 6))
 for prog in df['program'].unique():
-    if prog == 'sequential': continue
+    if prog == 'sequential': 
+        continue
     sub = df[df['program'] == prog]
     plt.plot(sub['procs'], sub['speedup'], 's-', label=prog)
 plt.plot([1, 64], [1, 64], 'k--', label='Идеальное')
@@ -36,11 +55,17 @@ plt.ylabel('Ускорение')
 plt.title('Ускорение')
 plt.legend()
 plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(os.path.join(PLOTS_DIR, "speedup.png"), dpi=150)
+plt.close()
 
-# 3. Эффективность
-plt.subplot(2, 2, 3)
+# -----------------------------
+# 3. График эффективности
+# -----------------------------
+plt.figure(figsize=(8, 6))
 for prog in df['program'].unique():
-    if prog == 'sequential': continue
+    if prog == 'sequential': 
+        continue
     sub = df[df['program'] == prog]
     plt.plot(sub['procs'], sub['efficiency'], '^-', label=prog)
 plt.axhline(1.0, color='k', linestyle='--')
@@ -49,8 +74,11 @@ plt.ylabel('Эффективность')
 plt.title('Эффективность')
 plt.legend()
 plt.grid(True, alpha=0.3)
-
 plt.tight_layout()
-plt.savefig("results/plots/performance.png", dpi=150)
+plt.savefig(os.path.join(PLOTS_DIR, "efficiency.png"), dpi=150)
 plt.close()
-print("Графики сохранены в results/plots/performance.png")
+
+print("Графики сохранены:")
+print("  → results/plots/execution_time.png")
+print("  → results/plots/speedup.png")
+print("  → results/plots/efficiency.png")
